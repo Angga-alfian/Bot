@@ -49,8 +49,8 @@ async def permitpm(event):
                     if event.text != prevmsg:
                         async for message in event.client.iter_messages(event.chat_id, 
                                                                         from_user='me', 
-                                                                        search=UNAPPROVED_MSG, l
-                                                                        imit=1):
+                                                                        search=UNAPPROVED_MSG, 
+                                                                        limit=1):
                             await message.delete()
                         await event.reply(UNAPPROVED_MSG)
                     LASTMSG.update({event.chat_id: event.text})
