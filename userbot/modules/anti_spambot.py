@@ -79,7 +79,7 @@ async def welcome_mute(welcm):
                         LOGS.info("CAS check failed, falling back to legacy anti_spambot behaviour.")
                         pass
 
-                    if data and data[ok]:
+                    if data and data['ok']:
                         spambot = True
                     elif "http://" in message.text:
                         spambot = True
