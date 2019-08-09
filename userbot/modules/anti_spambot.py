@@ -64,14 +64,14 @@ async def welcome_mute(welcm):
                     if message_date < join_time:
                         continue  # The message was sent before the user joined, thus ignore it
 
+                    user = await welcm.client.get_entity(user_id)
+
                     # DEBUGGING. LEAVING IT HERE FOR SOME TIME ###
                     print(f"User Joined: {user.first_name} [ID: {user.id}]")
                     print(f"Chat: {welcm.chat.title}")
                     print(f"Time: {join_time}")
                     print(f"Message Sent: {message.text}\n\n[Time: {message_date}]")
                     #
-
-                    user = await welcm.client.get_entity(user_id)
 
                     try:
                         cas_url = f"https://combot.org/api/cas/check?user_id={user.id}"
