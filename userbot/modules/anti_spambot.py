@@ -87,7 +87,7 @@ async def welcome_mute(welcm):
                     elif "http://" in message.text:
                         reason = "Match on `http` URLs"
                         spambot = True
-                    elif "t.me" or "telegram.me" or "telegram.org" in message.text:
+                    elif "t.me" in message.text:
                         reason = "Potential Promotion Message"
                         spambot = True
                     elif message.fwd_from:
