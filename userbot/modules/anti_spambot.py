@@ -13,7 +13,7 @@ from telethon.events import ChatAction
 from telethon.tl.functions.channels import EditBannedRequest
 from telethon.tl.types import ChannelParticipantsAdmins, Message
 
-from userbot import LOGS, BOTLOG, BOTLOG_CHATID, CMD_HELP, ANTI_SPAMBOT, bot
+from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, ANTI_SPAMBOT, ANTI_SPAMBOT_SHOUT, bot
 from userbot.modules.admin import BANNED_RIGHTS, UNBAN_RIGHTS
 
 
@@ -78,7 +78,7 @@ async def welcome_mute(welcm):
                         r = get(cas_url, timeout = 3)
                         data = r.json()
                     except:
-                        LOGS.info("CAS check failed, falling back to legacy anti_spambot behaviour.")
+                        print("CAS check failed, falling back to legacy anti_spambot behaviour.")
                         pass
 
                     if data and data['ok']:
@@ -121,10 +121,11 @@ async def welcome_mute(welcm):
                 admin = chat.admin_rights
                 creator = chat.creator
                 if not admin and not creator:
-                    await welcm.reply(
-                        "@admins\n"
-                        "`ANTI SPAMBOT DETECTOR!\n"
-                        "THIS USER MATCHES MY ALGORITHMS AS A SPAMBOT!`")
+                    if ANTI_SPAMBOT_SHOUT:
+                        await welcm.reply(
+                            "@admins\n"
+                            "`ANTI SPAMBOT DETECTOR!\n"
+                            "THIS USER MATCHES MY ALGORITHMS AS A SPAMBOT!`")
                 else:
                     await welcm.reply(
                         "`Potential Spambot Detected! Kicking away! "
@@ -149,10 +150,11 @@ async def welcome_mute(welcm):
                         )
 
                     except BaseException:
-                        await welcm.reply(
-                            "@admins\n"
-                            "`ANTI SPAMBOT DETECTOR!\n"
-                            "THIS USER MATCHES MY ALGORITHMS AS A SPAMBOT!`")
+                        if ANTI_SPAMBOT_SHOUT:
+                            await welcm.reply(
+                                "@admins\n"
+                                "`ANTI SPAMBOT DETECTOR!\n"
+                                "THIS USER MATCHES MY ALGORITHMS AS A SPAMBOT!`")
 
                 if BOTLOG:
                     await welcm.client.send_message(
