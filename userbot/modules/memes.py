@@ -21,7 +21,7 @@ from telethon.tl.types import MessageEntityMentionName
 
 from cowpy import cow
 
-from userbot import CMD_HELP, ZALG_LIST, BOTLOG, BOTLOG_CHATID
+from userbot import CMD_HELP
 from userbot.events import register
 
 # ================= CONSTANT =================
@@ -34,6 +34,117 @@ METOOSTR = [
     "Haha yes",
     "Me rn",
 ]
+
+ZALG_LIST = [["̖",
+              " ̗",
+              " ̘",
+              " ̙",
+              " ̜",
+              " ̝",
+              " ̞",
+              " ̟",
+              " ̠",
+              " ̤",
+              " ̥",
+              " ̦",
+              " ̩",
+              " ̪",
+              " ̫",
+              " ̬",
+              " ̭",
+              " ̮",
+              " ̯",
+              " ̰",
+              " ̱",
+              " ̲",
+              " ̳",
+              " ̹",
+              " ̺",
+              " ̻",
+              " ̼",
+              " ͅ",
+              " ͇",
+              " ͈",
+              " ͉",
+              " ͍",
+              " ͎",
+              " ͓",
+              " ͔",
+              " ͕",
+              " ͖",
+              " ͙",
+              " ͚",
+              " ",
+              ],
+             [" ̍",
+              " ̎",
+              " ̄",
+              " ̅",
+              " ̿",
+              " ̑",
+              " ̆",
+              " ̐",
+              " ͒",
+              " ͗",
+              " ͑",
+              " ̇",
+              " ̈",
+              " ̊",
+              " ͂",
+              " ̓",
+              " ̈́",
+              " ͊",
+              " ͋",
+              " ͌",
+              " ̃",
+              " ̂",
+              " ̌",
+              " ͐",
+              " ́",
+              " ̋",
+              " ̏",
+              " ̽",
+              " ̉",
+              " ͣ",
+              " ͤ",
+              " ͥ",
+              " ͦ",
+              " ͧ",
+              " ͨ",
+              " ͩ",
+              " ͪ",
+              " ͫ",
+              " ͬ",
+              " ͭ",
+              " ͮ",
+              " ͯ",
+              " ̾",
+              " ͛",
+              " ͆",
+              " ̚",
+              ],
+             [" ̕",
+              " ̛",
+              " ̀",
+              " ́",
+              " ͘",
+              " ̡",
+              " ̢",
+              " ̧",
+              " ̨",
+              " ̴",
+              " ̵",
+              " ̶",
+              " ͜",
+              " ͝",
+              " ͞",
+              " ͟",
+              " ͠",
+              " ͢",
+              " ̸",
+              " ̷",
+              " ͡",
+              ]]
 
 EMOJIS = [
     "😂",
@@ -896,7 +1007,7 @@ async def smrk(smk):
 async def payf(e):
     if not e.text[0].isalpha() and e.text[0] not in ("/", "#", "@", "!"):
         paytext = e.pattern_match.group(1)
-        pay = "{}\n{}\n{}\n{}\n{}\n{}\n{}".format(paytext*5, paytext*1,paytext*1, paytext*4, paytext*1, paytext*1, paytext*1)
+        pay = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}".format(paytext*8, paytext*8, paytext*2, paytext*2, paytext*2, paytext*6, paytext*6, paytext*2, paytext*2, paytext*2, paytext*2, paytext*2)
         await e.edit(pay)
 
 
@@ -915,11 +1026,6 @@ async def let_me_google_that_for_you(lmgtfy_q):
         payload = {'format': 'json', 'url': lfy_url}
         r = requests.get('http://is.gd/create.php', params=payload)
         await lmgtfy_q.edit(f"[{query}]({r.json()['shorturl']})")
-        if BOTLOG:
-            await lmgtfy_q.client.send_message(
-                BOTLOG_CHATID,
-                "LMGTFY query `" + query + "` was executed successfully",
-            )
 
 @register(pattern='.type(?: |$)(.*)')
 async def typewriter(typew):
