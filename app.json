@@ -74,6 +74,10 @@
       "description": "Download location for many modules (GDrive, .download etc..)",
       "value": "./downloads/"
     },
+    "CLEAN_WELCOME": {
+      "description": "Deletes old welcome messages; when a new person joins, the old message is deleted.",
+      "value": "True"
+    },
     "G_DRIVE_CLIENT_ID": {
       "description": "Enter Your Client ID for Google Drive.",
       "required": false
@@ -84,11 +88,11 @@
     }
   },
   "addons": [
-      {
-        "plan": "heroku-postgresql",
-        "options": {
-          "version": "9.5"
-        }
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.5"
       }
-    ]
-  }
+    }
+  ]
+}
