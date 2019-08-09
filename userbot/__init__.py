@@ -81,6 +81,10 @@ ANTI_SPAMBOT = sb(os.environ.get(
     "ANTI_SPAMBOT", "False"
 ))
 
+ANTI_SPAMBOT_SHOUT = sb(os.environ.get(
+    "ANTI_SPAMBOT_SHOUT", "False"
+))
+
 YOUTUBE_API_KEY = os.environ.get(
     "YOUTUBE_API_KEY", None
     )
