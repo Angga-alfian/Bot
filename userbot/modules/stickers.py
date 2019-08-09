@@ -34,17 +34,21 @@ async def kang(args):
 
         if message and message.media:
             if isinstance(message.media, MessageMediaPhoto):
+                await args.edit("`Please wait while I convert this pic into a sticker !!`")
                 photo = io.BytesIO()
                 photo = await bot.download_media(message.photo, photo)
             elif "image" in message.media.document.mime_type.split('/'):
+                await args.edit("`Please wait while I convert this pic into a sticker !!`")
                 photo = io.BytesIO()
                 await bot.download_file(message.media.document, photo)
                 if (DocumentAttributeFilename(file_name='sticker.webp')
                         in message.media.document.attributes):
+                    await args.edit("`Please wait while I kang this sticker !!`")
                     emoji = message.media.document.attributes[1].alt
                     emojibypass = True
             elif (DocumentAttributeFilename(file_name='AnimatedSticker.tgs')
                   in message.media.document.attributes):
+                await args.edit("`Please wait while I kang this animated sticker !!`")
                 await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
 
                 # The attributes list of animated stickers is not consistent
@@ -84,7 +88,7 @@ async def kang(args):
                     emoji = splat[1]
 
             packname = f"a{user.id}_by_{user.username}_{pack}"
-            packnick = f"@{user.username}'s userbot pack {pack}"
+            packnick = f"@{user.username}'s kang pack Vol.{pack}"
             cmd = '/newpack'
             file = io.BytesIO()
 
@@ -94,7 +98,7 @@ async def kang(args):
                 image.save(file, "PNG")
             else:
                 packname += "_anim"
-                packnick += " animated"
+                packnick = f"@{user.username}'s animated kang pack Vol.{pack}"
                 cmd = '/newanimated'
 
             response = urllib.request.urlopen(
@@ -102,7 +106,7 @@ async def kang(args):
             )
             htmlstr = response.read().decode("utf8").split('\n')
 
-            if "  A <strong>Telegram</strong> user has created the <strong>Sticker&nbsp;Set</strong>." not in htmlstr:
+            if "A <strong>Telegram</strong> user has created the <strong>Sticker&nbsp;Set</strong>." not in htmlstr:
                 async with bot.conversation('Stickers') as conv:
                     await conv.send_message('/addsticker')
                     await conv.get_response()
@@ -113,7 +117,6 @@ async def kang(args):
                     if is_anim:
                         await conv.send_file('AnimatedSticker.tgs', force_document=True)
                         remove('AnimatedSticker.tgs')
-                        # await bot.forward_messages('Stickers', [message.id], args.chat_id)
                     else:
                         file.seek(0)
                         await conv.send_file(file, force_document=True)
@@ -127,7 +130,7 @@ async def kang(args):
                     # Ensure user doesn't get spamming notifications
                     await bot.send_read_acknowledge(conv.chat_id)
             else:
-                await args.edit("Userbot sticker pack doesn't exist! Making a new one!")
+                await args.edit("`New kang pack coming up, please wait !!`")
                 async with bot.conversation('Stickers') as conv:
                     await conv.send_message(cmd)
                     await conv.get_response()
@@ -168,7 +171,7 @@ async def kang(args):
                     await bot.send_read_acknowledge(conv.chat_id)
 
             await args.edit(
-                f"Sticker added! Your pack can be found [here](t.me/addstickers/{packname})",
+                f"Sticker added! My pack can be found [here](t.me/addstickers/{packname})",
                 parse_mode='md'
             )
 
@@ -205,13 +208,13 @@ async def get_pack_info(event):
             return
         rep_msg = await event.get_reply_message()
         if not rep_msg.document:
-            await bot.update_message(event, "`Reply to a sticker to get the pack details`")
+            await event.client.edit("`Reply to a sticker to get the pack details`")
             return
         stickerset_attr = rep_msg.document.attributes[1]
         if not isinstance(stickerset_attr, DocumentAttributeSticker):
-            await bot.update_message(event, "`Not a valid sticker`")
+            await event.client.edit("`Not a valid sticker`")
             return
-        get_stickerset = await bot(GetStickerSetRequest(InputStickerSetID(id=stickerset_attr.stickerset.id, access_hash=stickerset_attr.stickerset.access_hash)))
+        get_stickerset = await event.client(GetStickerSetRequest(InputStickerSetID(id=stickerset_attr.stickerset.id, access_hash=stickerset_attr.stickerset.access_hash)))
         pack_emojis = []
         for document_sticker in get_stickerset.packs:
             if document_sticker.emoticon not in pack_emojis:
