@@ -30,7 +30,7 @@ async def welcome_mute(welcm):
 
             if welcm.user_added:
                 ignore = False
-                adder = welcm.action_message.from_id
+                adder = welcm._added_by
 
             async for admin in bot.iter_participants(welcm.chat_id, filter=ChannelParticipantsAdmins):
                 if admin.id == adder:
@@ -65,8 +65,10 @@ async def welcome_mute(welcm):
                         continue  # The message was sent before the user joined, thus ignore it
 
                     # DEBUGGING. LEAVING IT HERE FOR SOME TIME ###
-                    LOGS.info(f"User Joined: {join_time}")
-                    LOGS.info(f"Message Sent: {message_date}")
+                    print(f"User Joined: {user.first_name} [ID: {user.id}]")
+                    print(f"Chat: {welcm.chat.title}")
+                    print(f"Time: {join_time}")
+                    print(f"Message Sent: {message.text}\n\n[Time: {message_date}]")
                     #
 
                     user = await welcm.client.get_entity(user_id)
@@ -80,14 +82,19 @@ async def welcome_mute(welcm):
                         pass
 
                     if data and data['ok']:
+                        reason = f"[Banned by Combot Anti Spam](https://combot.org/cas/query?u={user.id})"
                         spambot = True
                     elif "http://" in message.text:
+                        reason = "Match on `http` URLs"
                         spambot = True
-                    elif "t.me" in message.text:
+                    elif "t.me" or "telegram.me" or "telegram.org" in message.text:
+                        reason = "Potential Promotion Message"
                         spambot = True
                     elif message.fwd_from:
+                        reason = "Forwarded Message"
                         spambot = True
                     elif "https://" in message.text:
+                        reason = "Match on `https` URLs"
                         spambot = True
                     else:
                         if user.first_name in (
@@ -99,17 +106,17 @@ async def welcome_mute(welcm):
                                 "Info"
                         ):
                             if user.last_name == "Bot":
+                                reason = "Known Spam Bot"
                                 spambot = True
 
                     if spambot:
-                        LOGS.info(f"Potential Spam Message: {message.text}")
+                        print(f"Potential Spam Message: {message.text}")
                         await message.delete()
                         break
 
                     continue  # Check the next messsage
 
             if spambot:
-
                 chat = await welcm.get_chat()
                 admin = chat.admin_rights
                 creator = chat.creator
@@ -152,8 +159,9 @@ async def welcome_mute(welcm):
                         BOTLOG_CHATID,
                         "#SPAMBOT-KICK\n"
                         f"USER: [{user.first_name}](tg://user?id={user.id})\n"
-                        f"CHAT: {welcm.chat.title}(`{welcm.chat_id}`)\n\n"
-                        f"MESSAGE: {message.text}"
+                        f"CHAT: {welcm.chat.title}(`{welcm.chat_id}`)\n"
+                        f"REASON: {reason}\n"
+                        f"MESSAGE:\n{message.text}"
                     )
     except ValueError:
         pass
