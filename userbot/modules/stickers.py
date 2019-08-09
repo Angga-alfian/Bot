@@ -50,15 +50,12 @@ async def kang(args):
                   in message.media.document.attributes):
                 await args.edit("`Please wait while I kang this animated sticker !!`")
                 await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
-
-                # The attributes list of animated stickers is not consistent
-                # for some reason, so we look for the emoji in all possible
-                # parts of the attributes (hacky, but consistent.)
-                try:
-                    emoji = message.media.document.attributes[1].alt
-                except:
-                    emoji = message.media.document.attributes[0].alt
-
+                
+                attributes = message.media.document.attributes
+                for attribute in attributes:
+                    if isinstance(attribute, DocumentAttributeSticker):
+                        emoji = attribute.alt
+                        
                 emojibypass = True
                 is_anim = True
                 photo = 1
@@ -120,7 +117,10 @@ async def kang(args):
                     else:
                         file.seek(0)
                         await conv.send_file(file, force_document=True)
-                    await conv.get_response()
+                    rsp = await conv.get_response()
+                    if "Sorry, the file type is invalid." in rsp:
+                        await args.edit("Failed to add sticker, try using the @Stickers bot.")
+                        return
                     await conv.send_message(emoji)
                     # Ensure user doesn't get spamming notifications
                     await bot.send_read_acknowledge(conv.chat_id)
@@ -147,7 +147,10 @@ async def kang(args):
                     else:
                         file.seek(0)
                         await conv.send_file(file, force_document=True)
-                    await conv.get_response()
+                    rsp = await conv.get_response()
+                    if "Sorry, the file type is invalid." in rsp:
+                        await args.edit("Failed to add sticker, try using the @Stickers bot.")
+                        return
                     await conv.send_message(emoji)
                     # Ensure user doesn't get spamming notifications
                     await bot.send_read_acknowledge(conv.chat_id)
