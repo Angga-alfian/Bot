@@ -12,7 +12,7 @@ import urllib.request
 from os import remove
 from PIL import Image
 from telethon.tl.types import DocumentAttributeFilename, MessageMediaPhoto
-from userbot import bot, CMD_HELP
+from userbot import CMD_HELP
 from userbot.events import register
 from telethon.tl.functions.messages import GetStickerSetRequest
 from telethon.tl.types import InputStickerSetID
@@ -34,21 +34,21 @@ async def kang(args):
 
         if message and message.media:
             if isinstance(message.media, MessageMediaPhoto):
-                await args.edit("`Please wait while I convert this pic into a sticker !!`")
+                await args.edit("Please wait while I convert this pic into a sticker..")
                 photo = io.BytesIO()
                 photo = await bot.download_media(message.photo, photo)
             elif "image" in message.media.document.mime_type.split('/'):
-                await args.edit("`Please wait while I convert this pic into a sticker !!`")
+                await args.edit("Please wait while I convert this pic into a sticker..")
                 photo = io.BytesIO()
                 await bot.download_file(message.media.document, photo)
                 if (DocumentAttributeFilename(file_name='sticker.webp')
                         in message.media.document.attributes):
-                    await args.edit("`Please wait while I kang this sticker !!`")
+                    await args.edit("Please wait while I kang this sticker..")
                     emoji = message.media.document.attributes[1].alt
                     emojibypass = True
             elif (DocumentAttributeFilename(file_name='AnimatedSticker.tgs')
                   in message.media.document.attributes):
-                await args.edit("`Please wait while I kang this animated sticker !!`")
+                await args.edit("Please wait while I kang this animated sticker..")
                 await bot.download_file(message.media.document, 'AnimatedSticker.tgs')
                 
                 attributes = message.media.document.attributes
@@ -60,10 +60,10 @@ async def kang(args):
                 is_anim = True
                 photo = 1
             else:
-                await args.edit("`Unsupported File!`")
+                await args.edit("Unsupported File!")
                 return
         else:
-            await args.edit("`Reply to photo to kang it bruh`")
+            await args.edit("Reply to photo to kang it bruh")
             return
 
         if photo:
@@ -118,7 +118,7 @@ async def kang(args):
                         file.seek(0)
                         await conv.send_file(file, force_document=True)
                     rsp = await conv.get_response()
-                    if "Sorry, the file type is invalid." in rsp:
+                    if "Sorry, the file type is invalid." in rsp.text:
                         await args.edit("Failed to add sticker, try using the @Stickers bot.")
                         return
                     await conv.send_message(emoji)
@@ -130,7 +130,7 @@ async def kang(args):
                     # Ensure user doesn't get spamming notifications
                     await bot.send_read_acknowledge(conv.chat_id)
             else:
-                await args.edit("`New kang pack coming up, please wait !!`")
+                await args.edit("New kang pack coming up, please wait !!")
                 async with bot.conversation('Stickers') as conv:
                     await conv.send_message(cmd)
                     await conv.get_response()
@@ -143,12 +143,11 @@ async def kang(args):
                     if is_anim:
                         await conv.send_file('AnimatedSticker.tgs', force_document=True)
                         remove('AnimatedSticker.tgs')
-                        #await bot.forward_messages('Stickers', [message.id], args.chat_id)
                     else:
                         file.seek(0)
                         await conv.send_file(file, force_document=True)
                     rsp = await conv.get_response()
-                    if "Sorry, the file type is invalid." in rsp:
+                    if "Sorry, the file type is invalid." in rsp.text:
                         await args.edit("Failed to add sticker, try using the @Stickers bot.")
                         return
                     await conv.send_message(emoji)
@@ -206,16 +205,13 @@ async def resize_photo(photo):
 @register(outgoing=True, pattern="^.stkrinfo$")
 async def get_pack_info(event):
     if not event.text[0].isalpha() and event.text[0] not in ("/", "#", "@", "!"):
-        if not event.is_reply:
-            await bot.update_message(event, PACKINFO_HELP)
-            return
         rep_msg = await event.get_reply_message()
         if not rep_msg.document:
-            await event.client.edit("`Reply to a sticker to get the pack details`")
+            await event.client.edit("Reply to a sticker to get the pack details")
             return
         stickerset_attr = rep_msg.document.attributes[1]
         if not isinstance(stickerset_attr, DocumentAttributeSticker):
-            await event.client.edit("`Not a valid sticker`")
+            await event.client.edit("Not a valid sticker")
             return
         get_stickerset = await event.client(GetStickerSetRequest(InputStickerSetID(id=stickerset_attr.stickerset.id, access_hash=stickerset_attr.stickerset.access_hash)))
         pack_emojis = []
@@ -228,7 +224,7 @@ async def get_pack_info(event):
                 f"**Archived:** `{get_stickerset.set.archived}`\n" \
                 f"**Stickers In Pack:** `{len(get_stickerset.packs)}`\n" \
                 f"**Emojis In Pack:** {' '.join(pack_emojis)}"
-        await event.edit(OUTPUT)
+        await event.client.edit(OUTPUT)
 
 CMD_HELP.update({
     "stickers": ".kang\
