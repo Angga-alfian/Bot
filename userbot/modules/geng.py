@@ -19,9 +19,9 @@ from telethon.tl.types import InputStickerSetID
 from telethon.tl.types import DocumentAttributeSticker
 
 
-@register(outgoing=True, pattern="^.kang")
+@register(outgoing=True, pattern="^.geng")
 async def kang(args):
-    """ For .kang command, kangs stickers or creates new ones. """
+    """ For .geng command, kangs stickers or creates new ones. """
     if not args.text[0].isalpha() and args.text[0] not in ("/", "#", "@", "!"):
         user = await bot.get_me()
         if not user.username:
@@ -63,7 +63,7 @@ async def kang(args):
                 await args.edit("Unsupported File!")
                 return
         else:
-            await args.edit("Reply to photo to kang it bruh")
+            await args.edit("Reply stickernya dulu bangsat!")
             return
 
         if photo:
@@ -84,8 +84,8 @@ async def kang(args):
                     # pack
                     emoji = splat[1]
 
-            packname = f"a{user.id}_by_{user.username}_{pack}"
-            packnick = f"@{user.username}'s kang pack Vol.{pack}"
+            packname = f"Sticker{user.id}_by_{user.username}_{pack}"
+            packnick = f"@{user.username}'s kang pack stickers.{pack}"
             cmd = '/newpack'
             file = io.BytesIO()
 
@@ -119,7 +119,7 @@ async def kang(args):
                         await conv.send_file(file, force_document=True)
                     rsp = await conv.get_response()
                     if "Sorry, the file type is invalid." in rsp.text:
-                        await args.edit("Failed to add sticker, try using the @Stickers bot.")
+                        await args.edit("Gagal kang stickers, coba gunakan @Stickers bot.")
                         return
                     await conv.send_message(emoji)
                     # Ensure user doesn't get spamming notifications
@@ -130,7 +130,7 @@ async def kang(args):
                     # Ensure user doesn't get spamming notifications
                     await bot.send_read_acknowledge(conv.chat_id)
             else:
-                await args.edit("New kang pack coming up, please wait !!")
+                await args.edit("Kang sticker segera dimulai, mohon tunggu !!")
                 async with bot.conversation('Stickers') as conv:
                     await conv.send_message(cmd)
                     await conv.get_response()
@@ -148,7 +148,7 @@ async def kang(args):
                         await conv.send_file(file, force_document=True)
                     rsp = await conv.get_response()
                     if "Sorry, the file type is invalid." in rsp.text:
-                        await args.edit("Failed to add sticker, try using the @Stickers bot.")
+                        await args.edit("Gagal kang sticker, coba gunakan @Stickers bot.")
                         return
                     await conv.send_message(emoji)
                     # Ensure user doesn't get spamming notifications
@@ -173,7 +173,7 @@ async def kang(args):
                     await bot.send_read_acknowledge(conv.chat_id)
 
             await args.edit(
-                f"Sticker added! My pack can be found [here](t.me/addstickers/{packname})",
+                f"Sticker tercurry! silahkan cek [Disini](t.me/addstickers/{packname})",
                 parse_mode='md'
             )
 
@@ -227,8 +227,8 @@ async def get_pack_info(event):
         await event.client.edit(OUTPUT)
 
 CMD_HELP.update({
-    "stickers": ".kang\
-\nUsage: Reply .kang to a sticker or an image to kang it to your userbot pack.\
+    "stickers": ".geng\
+\nUsage: Reply .geng to a sticker or an image to kang it to your userbot pack.\
 \n\n.kang [emoji('s)]\
 \nUsage: Works just like .kang but uses the emoji('s) you picked.\
 \n\n.kang [number]\
