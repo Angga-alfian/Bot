@@ -20,7 +20,7 @@ from telethon.tl.types import DocumentAttributeSticker
 
 
 @register(outgoing=True, pattern="^.geng")
-async def kang(args):
+async def geng(args):
     """ For .geng command, kangs stickers or creates new ones. """
     if not args.text[0].isalpha() and args.text[0] not in ("/", "#", "@", "!"):
         user = await bot.get_me()
